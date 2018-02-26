@@ -58,7 +58,9 @@ public class StashBuilds {
         else {
             buildUrl = rootUrl + run.getUrl();
         }
-        repository.deletePullRequestComment(cause.getPullRequestId(), cause.getBuildStartCommentId());
+        if (trigger.getDeleteBuildStartedToStash()) {
+            repository.deletePullRequestComment(cause.getPullRequestId(), cause.getBuildStartCommentId());
+        }
 
         String additionalComment = "";
 
@@ -71,9 +73,11 @@ public class StashBuilds {
             }
         }
         String duration = run.getDurationString();
-        repository.postFinishedComment(cause.getPullRequestId(), cause.getSourceCommitHash(),
+        if (trigger.getReportBuildStatusToStash()) {
+            repository.postFinishedComment(cause.getPullRequestId(), cause.getSourceCommitHash(),
                 cause.getDestinationCommitHash(), result, buildUrl,
                 run.getNumber(), additionalComment, duration);
+        }
 
         //Merge PR
         StashBuildTrigger trig = StashBuildTrigger.getTrigger(run.getParent());
