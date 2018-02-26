@@ -58,7 +58,9 @@ public class StashBuilds {
         else {
             buildUrl = rootUrl + run.getUrl();
         }
+        if (trigger.getDeleteBuildStartedToStash()) {
         repository.deletePullRequestComment(cause.getPullRequestId(), cause.getBuildStartCommentId());
+        }
 
         String additionalComment = "";
 
@@ -71,6 +73,7 @@ public class StashBuilds {
             }
         }
         String duration = run.getDurationString();
+        if (trigger.getReportBuildStatusToStash()) {
         repository.postFinishedComment(cause.getPullRequestId(), cause.getSourceCommitHash(),
                 cause.getDestinationCommitHash(), result, buildUrl,
                 run.getNumber(), additionalComment, duration);
