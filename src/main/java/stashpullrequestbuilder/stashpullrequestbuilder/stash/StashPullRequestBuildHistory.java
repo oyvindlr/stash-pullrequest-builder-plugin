@@ -15,7 +15,7 @@ public class StashPullRequestBuildHistory implements Serializable {
     private final HashSet<Merge> mergeTriggerHistory;
     private final HashSet<Integer> commentTriggerHistory;
 
-    private class Merge {
+    private static class Merge implements Serializable {
         public final String branch;
         public final String target;
 
@@ -58,7 +58,6 @@ public class StashPullRequestBuildHistory implements Serializable {
 
     public void saveMergeTrigger(String branchSha, String targetSha) {
         Merge m = new Merge(branchSha, targetSha);
-        String mth = mergeTriggerHistory.toString();
         if (mergeHasBeenBuilt(m)) {
             logger.log(Level.SEVERE, "Merge trigger history already contains {0}", m);
         } else {
@@ -75,7 +74,6 @@ public class StashPullRequestBuildHistory implements Serializable {
     }
 
     public void saveCommentTrigger(Integer commentId) {
-        String cth = commentTriggerHistory.toString();
         if (commentHasBeenBuilt(commentId)) {
             logger.log(Level.SEVERE, "Comment trigger history already contains {0}", commentId);
         } else {
